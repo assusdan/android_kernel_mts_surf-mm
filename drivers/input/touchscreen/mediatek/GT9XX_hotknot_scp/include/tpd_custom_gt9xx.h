@@ -133,8 +133,8 @@ extern void force_reset_guitar(void);
 #endif
 /*STEP_3(optional):Custom set some config by themself,if need.*/
 #ifdef CONFIG_GTP_CUSTOM_CFG
-#define GTP_MAX_HEIGHT   800
-#define GTP_MAX_WIDTH    480
+#define GTP_MAX_HEIGHT   1280
+#define GTP_MAX_WIDTH    720
 #define GTP_INT_TRIGGER  0	/*0:Rising 1:Falling */
 #else
 #define GTP_MAX_HEIGHT   1280
@@ -230,7 +230,7 @@ typedef enum {
 #define GTP_DMA_MAX_TRANSACTION_LENGTH  255
 #define GTP_DMA_MAX_I2C_TRANSFER_SIZE   (GTP_DMA_MAX_TRANSACTION_LENGTH - GTP_ADDR_LENGTH)
 #define MAX_TRANSACTION_LENGTH        8
-#define TPD_I2C_NUMBER				I2C_CAP_TOUCH_CHANNEL
+#define TPD_I2C_NUMBER		      1
 #define I2C_MASTER_CLOCK              300
 #define MAX_I2C_TRANSFER_SIZE         (MAX_TRANSACTION_LENGTH - GTP_ADDR_LENGTH)
 #define TPD_MAX_RESET_COUNT           3
