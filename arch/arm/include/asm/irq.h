@@ -4,7 +4,7 @@
 #define NR_IRQS_LEGACY	16
 
 #ifndef CONFIG_SPARSE_IRQ
-#include <mach/irqs.h>
+#include </mnt/android_kernel_mts_surf/drivers/misc/mediatek/irq/mt6735/irq.h>
 #else
 #define NR_IRQS NR_IRQS_LEGACY
 #endif
