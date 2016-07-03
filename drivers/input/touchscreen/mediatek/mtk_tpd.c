@@ -142,14 +142,11 @@ int tpd_get_gpio_info(struct platform_device *pdev)
 		dev_err(&pdev->dev, "fwq Cannot find touch pinctrl1!\n");
 		return ret;
 	}
-	
-	//try to fix
-	
-	//pins_default = pinctrl_lookup_state(pinctrl1, "default");
-	//if (IS_ERR(pins_default)) {
-	//	ret = PTR_ERR(pins_default);
-	//	dev_err(&pdev->dev, "fwq Cannot find touch pinctrl default %d!\n", ret);
-	//}
+	pins_default = pinctrl_lookup_state(pinctrl1, "default");
+	if (IS_ERR(pins_default)) {
+		ret = PTR_ERR(pins_default);
+		dev_err(&pdev->dev, "fwq Cannot find touch pinctrl default %d!\n", ret);
+	}
 	eint_as_int = pinctrl_lookup_state(pinctrl1, "state_eint_as_int");
 	if (IS_ERR(eint_as_int)) {
 		ret = PTR_ERR(eint_as_int);
