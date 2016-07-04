@@ -133,8 +133,8 @@ extern void force_reset_guitar(void);
 #endif
 /*STEP_3(optional):Custom set some config by themself,if need.*/
 #ifdef CONFIG_GTP_CUSTOM_CFG
-#define GTP_MAX_HEIGHT   1280
-#define GTP_MAX_WIDTH    720
+#define GTP_MAX_HEIGHT   800
+#define GTP_MAX_WIDTH    480
 #define GTP_INT_TRIGGER  0	/*0:Rising 1:Falling */
 #else
 #define GTP_MAX_HEIGHT   1280
