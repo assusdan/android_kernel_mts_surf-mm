@@ -4,63 +4,20 @@
 #include "mt6735m.dtsi"
 
 / {
-memory@00000000 {
-		device_type = "memory";
-		reg = <0 0x40000000 0 0x3F000000>;
-	};
 
 	bus {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges = <0 0 0 0xffffffff>;
-
 		MTKFB@5e200000 {
 			compatible = "mediatek,MTKFB";
 			reg = <0x7F000000 0x1000000>;
 		};
-
 	};
-	led0:led@0 {
-		compatible = "mediatek,red";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
-	};
-	led1:led@1 {
-		compatible = "mediatek,green";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
-	};
-	led2:led@2 {
-		compatible = "mediatek,blue";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
-	};
-	led3:led@3 {
-		compatible = "mediatek,jogball-backlight";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
-	};
-	led4:led@4 {
-		compatible = "mediatek,keyboard-backlight";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
-	};
-	led5:led@5 {
-		compatible = "mediatek,button-backlight";
-		led_mode = <0>;
-		data = <1>;
-		pwm_config = <0 0 0 0 0>;
+	flashlight:flashlight {
+		compatible = "mediatek,mt6735-flashlight";
 	};
 	led6:led@6 {
 		compatible = "mediatek,lcd-backlight";
 		led_mode = <5>;
-		data = <1>;
+		data = <0>;
 		pwm_config = <0 0 0 0 0>;
 	};
 	vibrator0:vibrator@0 {
@@ -71,51 +28,30 @@ memory@00000000 {
 	};
  /* sensor standardization */
 		cust_accel@0 {
-		compatible				= "mediatek,mc3410";
-		i2c_num				= <2>;
-		i2c_addr				= <0x4c 0 0 0>;
-		direction				= <0>;
-		power_id				= <0xffff>;
-		power_vol				= <0>;
-		firlen					= <0>;
-		is_batch_supported			= <0>;
+			compatible = "mediatek,kxtj2_1009_new";
+			i2c_num	= <2>;
+			i2c_addr = <0xe 0 0 0>;
+			direction	= <5>;
+			power_id	= <0xffff>;
+			power_vol	= <0>;
+			firlen		= <0>;
+			is_batch_supported= <0>;
 		};
 
 		cust_alsps@0 {
-		compatible				= "mediatek,cm36652";
-		i2c_num				= <2>;
-		i2c_addr				= <0x60 0 0 0>;
-		polling_mode_ps			= <0>;
-		polling_mode_als		= <1>;
-		power_id				= <0xffff>;
-		power_vol				= <0>;
-		als_level = <0 328 861 1377 3125 7721 7767 12621 23062 28430 33274 47116 57694 57694 65535>;
-		als_value = <0 133 304 502 1004 2005 3058 5005 8008 10010 12000 16000 20000 20000 20000 20000>;
-		ps_threshold_high		=  <34>;
-		ps_threshold_low		=  <28>;
-		is_batch_supported_ps	= <0>;
-		is_batch_supported_als	= <0>;
-		};
-
-		cust_mag@0 {
-		compatible				= "mediatek,akm09911";
-		i2c_num				= <2>;
-		i2c_addr				= <0x0D 0 0 0>;
-		direction				= <1>;
-		power_id				= <0xffff>;
-		power_vol				= <0>;
-		is_batch_supported	= <0>;
-		};
-
-		cust_gyro@0 {
-		compatible				= "mediatek,itg1010";
-		i2c_num				= <2>;
-		i2c_addr				= <0x68 0 0 0>;
-		direction				= <3>;
-		power_id				= <0xffff>;
-		power_vol				= <0>;
-		firlen					= <0>;
-		is_batch_supported	= <0>;
+			compatible = "mediatek,epl2182";
+			i2c_num				= <2>;
+			i2c_addr = <0x49 0 0 0>;
+			polling_mode_ps			= <0>;
+			polling_mode_als		= <1>;
+			power_id			= <0xffff>;
+			power_vol			= <0>;
+			als_level = <0 10 20 30 40 50 100 1000 2000 3000 6000 10000 14000 18000 20000>;
+			als_value = <100 120 140 150 160 180 225 320 640 1280 1280 2600 2600 2600 10240 10240>;
+			ps_threshold_high		=  <800>;
+			ps_threshold_low		=  <200>;
+			is_batch_supported_ps	= <0>;
+			is_batch_supported_als	= <0>;
 		};
 };
 /* sensor gpio standization */
@@ -133,18 +69,6 @@ memory@00000000 {
 
 	};
 
-	gyro_intpin_cfg: gyropincfg {
-
-	    pins_cmd_dat {
-			pins = <PINMUX_GPIO67__FUNC_GPIO67>;
-			slew-rate = <0>;
-			bias-pull-down = <00>;
-		};
-	};
-
-	gyro_intpin_default: gyrodefaultcfg {
-
-	};
 };
 &alsps {
 	pinctrl-names = "pin_default", "pin_cfg";
@@ -154,37 +78,44 @@ memory@00000000 {
 
 };
 
-&gyro {
-	pinctrl-names = "pin_default", "pin_cfg";
-	pinctrl-0 = <&gyro_intpin_default>;
-	pinctrl-1 = <&gyro_intpin_cfg>;
-	status = "okay";
-
-};
 /* sensor end */
-
 &accdet {
 		accdet-mic-vol = <7>;
 		headset-mode-setting = <0x500 0x200 1 0x1F0 0x800 0x800 0x20>;
 		accdet-plugout-debounce = <20>;
 		/*1:ACC mode, 2:low cost without in bias, 6:low cost with in bias*/
-		accdet-mic-mode = <6>;
+		accdet-mic-mode = <1>;
 		/*0--MD_MAX--UP_MAX--DW_MAX*/
 		headset-three-key-threshold = <0 80 220 500>;
 		/*0--MD_MAX--VOICE_MAX--UP_MAX--DW_MAX*/
 		headset-four-key-threshold = <0 58 121 192 450>;
+
+		pinctrl-names = "default", "state_eint_as_int";
+		pinctrl-0 = <&ACCDET_pins_default>;
+		pinctrl-1 = <&ACCDET_pins_eint_as_int>;
+};
+&pio {
+	ACCDET_pins_default: acc_eint0default {
+	};
+	ACCDET_pins_eint_as_int: acc_eint@0 {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO6__FUNC_GPIO6>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
 };
 &touch {
-	tpd-resolution = <540 960>;
-	use-tpd-button = <0>;
-	tpd-key-num = <3>;
-	tpd-key-local= <139 172 158 0>;
-	tpd-key-dim-local = <90 883 100 40 230 883 100 40 370 883 100 40 0 0 0 0>;
-	tpd-max-touch-num = <5>;
+	tpd-resolution = <720 1280>;
+	use-tpd-button = <1>;
+	tpd-key-num = <4>;
+	tpd-key-local= <139 158 217 172 0>;
+	tpd-key-dim-local = <160 2000 70 40 950 2000 70 40 200 2000 70 40 540 2000 70 40 0 0 0 0>;
+	tpd-max-touch-num = <2>;
 	tpd-filter-enable = <1>;
 	tpd-filter-pixel-density = <93>;
 	tpd-filter-custom-prameters = <0 0 0 0 0 0 0 0 0 0 0 0>;
-	tpd-filter-custom-speed = <0 0 0>;
+	tpd-filter-custom-speed = <15 15 0>;
 	pinctrl-names = "default", "state_eint_as_int", "state_eint_output0", "state_eint_output1",
 		"state_rst_output0", "state_rst_output1";
 	pinctrl-0 = <&CTP_pins_default>;
@@ -457,25 +388,25 @@ memory@00000000 {
 		ett-hs200-default = <OFFSET_MSDC_PATCH_BIT0	MSDC_PB0_INT_DAT_LATCH_CK_SEL 0x0
 			OFFSET_MSDC_PATCH_BIT0	MSDC_PB0_CKGEN_MSDC_DLY_SEL   0x0
 			OFFSET_MSDC_PATCH_BIT1	MSDC_PB1_CMD_RSP_TA_CNTR      0x1
-			OFFSET_MSDC_IOCON		MSDC_IOCON_RSPL               0x0
-			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_CMDRDLY        0x7
-			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_CMDRRDLY       0xb
+			OFFSET_MSDC_IOCON		MSDC_IOCON_RSPL               0x1
+			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_CMDRDLY        0x0
+			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_CMDRRDLY       0x6
 			OFFSET_MSDC_PATCH_BIT1		MSDC_PB1_WRDAT_CRCS_TA_CNTR   0x1
-			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_DATWRDLY       0xb
-			OFFSET_MSDC_IOCON			MSDC_IOCON_W_D0SPL            0x0
-			OFFSET_MSDC_DAT_RDDLY0		MSDC_DAT_RDDLY0_D0            0x7
-			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_DATRRDLY       0x9
+			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_DATWRDLY       0xf
+			OFFSET_MSDC_IOCON			MSDC_IOCON_W_D0SPL            0x1
+			OFFSET_MSDC_DAT_RDDLY0		MSDC_DAT_RDDLY0_D0            0x5
+			OFFSET_MSDC_PAD_TUNE0	MSDC_PAD_TUNE0_DATRRDLY       0x12
 			OFFSET_MSDC_IOCON		MSDC_IOCON_R_D_SMPL           0x0>;
 
 		ett-hs400-cells = <8>;
 		ett-hs400-default = <OFFSET_MSDC_PATCH_BIT0	MSDC_PB0_INT_DAT_LATCH_CK_SEL	0x0
 			OFFSET_MSDC_PATCH_BIT0		MSDC_PB0_CKGEN_MSDC_DLY_SEL		0x0
 			OFFSET_EMMC50_PAD_DS_TUNE	MSDC_EMMC50_PAD_DS_TUNE_DLY1	0x2
-			OFFSET_EMMC50_PAD_DS_TUNE	MSDC_EMMC50_PAD_DS_TUNE_DLY3	0x10
+			OFFSET_EMMC50_PAD_DS_TUNE	MSDC_EMMC50_PAD_DS_TUNE_DLY3	0x12
 			OFFSET_MSDC_PATCH_BIT1			MSDC_PB1_CMD_RSP_TA_CNTR	0x1
-			OFFSET_MSDC_IOCON		MSDC_IOCON_RSPL				0x0
-			OFFSET_MSDC_PAD_TUNE0			MSDC_PAD_TUNE0_CMDRDLY		0x6
-			OFFSET_MSDC_PAD_TUNE0		MSDC_PAD_TUNE0_CMDRRDLY		0x6>;
+			OFFSET_MSDC_IOCON		MSDC_IOCON_RSPL				0x1
+			OFFSET_MSDC_PAD_TUNE0			MSDC_PAD_TUNE0_CMDRDLY		0x0
+			OFFSET_MSDC_PAD_TUNE0		MSDC_PAD_TUNE0_CMDRRDLY		0xb>;
 	};
 
 	mmc1_pins_default: mmc1@default {
@@ -541,83 +472,6 @@ memory@00000000 {
 };
 /* mmc end */
 
-/* NFC GPIO standardization */
-&pio {
-	nfc_default: mtknfc {
-
-	};
-
-	nfc_ven_high: state_ven_high {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO4__FUNC_GPIO4>;
-			slew-rate = <1>;
-			output-high;
-		};
-	};
-
-	nfc_ven_low: state_ven_low {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO4__FUNC_GPIO4>;
-			slew-rate = <1>;
-			output-low;
-		};
-	};
-
-	nfc_rst_high: state_rst_high {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO3__FUNC_GPIO3>;
-			slew-rate = <1>;
-			output-high;
-		};
-	};
-
-	nfc_rst_low: state_rst_low {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO3__FUNC_GPIO3>;
-			slew-rate = <1>;
-			output-low;
-		};
-	};
-
-	nfc_eint_high: state_eint_high {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
-			slew-rate = <1>;
-			output-high;
-		};
-	};
-
-	nfc_eint_low: state_eint_low {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO1__FUNC_GPIO1>;
-			slew-rate = <1>;
-			output-low;
-		};
-	};
-
-	nfc_irq_init: state_irq_init {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO2__FUNC_GPIO2>;
-			slew-rate = <0>;
-			bias-pull-down = <00>;
-		};
-	};
-};
-
-&nfc {
-	pinctrl-names = "mtknfc", "ven_high", "ven_low", "rst_high", "rst_low", "eint_high", "eint_low", "irq_init";
-	pinctrl-0 = <&nfc_default>;
-	pinctrl-1 = <&nfc_ven_high>;
-	pinctrl-2 = <&nfc_ven_low>;
-	pinctrl-3 = <&nfc_rst_high>;
-	pinctrl-4 = <&nfc_rst_low>;
-	pinctrl-5 = <&nfc_eint_high>;
-	pinctrl-6 = <&nfc_eint_low>;
-	pinctrl-7 = <&nfc_irq_init>;
-	status = "okay";
-};
-/* NFC end */
-
 /* USB GPIO Kernal Standardization start */
 &pio {
 	usb_default: usb_default {
@@ -631,26 +485,26 @@ memory@00000000 {
 		};
 	};
 
-	gpio83_mode2_drvvbus: drvvbus_init {
+	gpio96_mode2_drvvbus: drvvbus_init {
 		pins_cmd_dat {
-			pins = <PINMUX_GPIO83__FUNC_GPIO83>;
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
 			slew-rate = <1>;
 			bias-pull-down = <00>;
 		};
 	};
 
-	gpio83_mode2_drvvbus_low: drvvbus_low {
+	gpio96_mode2_drvvbus_low: drvvbus_low {
 		pins_cmd_dat {
-			pins = <PINMUX_GPIO83__FUNC_GPIO83>;
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
 			slew-rate = <1>;
 			output-low;
 			bias-pull-down = <00>;
 		};
 	};
 
-	gpio83_mode2_drvvbus_high: drvvbus_high {
+	gpio96_mode2_drvvbus_high: drvvbus_high {
 		pins_cmd_dat {
-			pins = <PINMUX_GPIO83__FUNC_GPIO83>;
+			pins = <PINMUX_GPIO96__FUNC_GPIO96>;
 			slew-rate = <1>;
 			output-high;
 			bias-pull-down = <00>;
@@ -663,9 +517,98 @@ memory@00000000 {
 	pinctrl-names = "usb_default", "iddig_irq_init", "drvvbus_init", "drvvbus_low", "drvvbus_high";
 	pinctrl-0 = <&usb_default>;
 	pinctrl-1 = <&gpio0_mode1_iddig>;
-	pinctrl-2 = <&gpio83_mode2_drvvbus>;
-	pinctrl-3 = <&gpio83_mode2_drvvbus_low>;
-	pinctrl-4 = <&gpio83_mode2_drvvbus_high>;
+	pinctrl-2 = <&gpio96_mode2_drvvbus>;
+	pinctrl-3 = <&gpio96_mode2_drvvbus_low>;
+	pinctrl-4 = <&gpio96_mode2_drvvbus_high>;
 	status = "okay";
 };
 /* USB GPIO Kernal Standardization end */
+&pio {
+
+	ssw_hot_plug_mode1:ssw@1 {
+
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO8__FUNC_GPIO8>;
+			bias-disable;
+		};
+
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO9__FUNC_GPIO9>;
+			bias-disable;
+		};
+	};
+
+	ssw_hot_plug_mode2:ssw@2 {
+
+		pins_cmd0_dat {
+			pins = <PINMUX_GPIO8__FUNC_GPIO8>;
+			bias-disable;
+		};
+
+		pins_cmd1_dat {
+			pins = <PINMUX_GPIO9__FUNC_GPIO9>;
+			bias-disable;
+		};
+	};
+};
+
+/* FLASHLIGHT GPIO standardization */
+&pio {
+        flashlight_pins_default: default {
+        };
+
+        flashlight_pins_hwen_high: hwen_high {
+            pins_cmd_dat {
+                        pins = <PINMUX_GPIO43__FUNC_GPIO43>;
+                        slew-rate = <1>;
+                        output-high;
+                };
+        };
+
+        flashlight_pins_hwen_low: hwen_low {
+            pins_cmd_dat {
+                        pins = <PINMUX_GPIO43__FUNC_GPIO43>;
+                        slew-rate = <1>;
+                        output-low;
+                };
+        };
+
+};
+
+&flashlight {
+        pinctrl-names = "default", "hwen_high", "hwen_low";
+        pinctrl-0 = <&flashlight_pins_default>;
+        pinctrl-1 = <&flashlight_pins_hwen_high>;
+        pinctrl-2 = <&flashlight_pins_hwen_low>;
+        status = "okay";
+
+};
+/* FLASHLIGHT GPIO end */
+
+/* AUDIO GPIO standardization */
+&audgpio {
+	pinctrl-names = "default", "extamp-pullhigh", "extamp-pulllow";
+	pinctrl-0 = <&AUD_pins_default>;
+	pinctrl-1 = <&AUD_pins_extamp_high>;
+	pinctrl-2 = <&AUD_pins_extamp_low>;
+	status = "okay";
+};
+&pio {
+	AUD_pins_default: audiodefault {
+	};
+	AUD_pins_extamp_high: audexamphigh {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO4__FUNC_GPIO4>;
+				slew-rate = <1>;
+				output-high;
+		};
+	};
+	AUD_pins_extamp_low: audexamplow {
+		pins_cmd_dat {
+			pins = <PINMUX_GPIO4__FUNC_GPIO4>;
+				slew-rate = <1>;
+				output-low;
+		};
+	};
+};
+/* AUDIO end */
