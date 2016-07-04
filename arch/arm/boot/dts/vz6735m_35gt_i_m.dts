@@ -180,7 +180,7 @@ memory@00000000 {
 		headset-four-key-threshold = <0 58 121 192 450>;
 };
 &touch {
-	tpd-resolution = <480 854>;
+	tpd-resolution = <540 960>;
 	use-tpd-button = <0>;
 	tpd-key-num = <3>;
 	tpd-key-local= <139 172 158 0>;

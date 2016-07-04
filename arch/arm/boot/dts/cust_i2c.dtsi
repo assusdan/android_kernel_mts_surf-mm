@@ -27,9 +27,9 @@
 };
 
 &i2c1 {
-	cap_touch@2a {
+	cap_touch@5d {
 		compatible = "mediatek,cap_touch";
-		reg = <0x2a>;
+		reg = <0x5d>;
 	};
 
 	i2c_lcd_bias@3e {
