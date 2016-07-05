@@ -1669,6 +1669,14 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	/* int i; */
 	u8 data;
 	int reset_count = 3;
+	/* unsigned char config_id[4]; */
+	/* unsigned char tp_id[8]; */
+	/* unsigned int config_id_no = 0; */
+	/* u16 tp_x_for_lcd=0; */
+	/* u16 tp_y_for_lcd=0; */
+	/* struct synaptics_rmi4_fn *fhandler; */
+	/* struct synaptics_rmi4_data *rmi4_data; */
+	/* struct synaptics_rmi4_device_info *rmi; */
 	struct task_struct *thread = NULL;
 
 	TPD_DMESG("%s:enter\n", __func__);
