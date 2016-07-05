@@ -976,7 +976,7 @@ static int tpd_local_init(void)
 
 /* Function to manage low power suspend */
 static void tpd_suspend(struct device *h)
-{
+{/*
 	s32 ret = -1;
 #if defined(CONFIG_GTP_HOTKNOT)
 #ifndef CONFIG_HOTKNOT_BLOCK_RW
@@ -1038,12 +1038,13 @@ static void tpd_suspend(struct device *h)
 
 	mutex_unlock(&i2c_access);
 	msleep(58);
+	*/
 }
 
 /* Function to manage power-on resume */
 static void tpd_resume(struct device *h)
 {
-	s32 ret = -1;
+/*	s32 ret = -1;
 
 	GTP_INFO("TPD resume start...");
 	gtp_suspend = false;
@@ -1086,7 +1087,7 @@ static void tpd_resume(struct device *h)
 #ifdef CONFIG_GTP_ESD_PROTECT
 	gt1x_esd_switch(SWITCH_ON);
 #endif
-
+*/
 	GTP_DEBUG("tpd resume end.");
 }
 
