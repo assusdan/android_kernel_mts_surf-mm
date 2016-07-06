@@ -105,23 +105,11 @@
  */
 #define TAG     "[Power/gpufreq] "
 
-#define gpufreq_err(fmt, args...)       \
-	pr_err(TAG"[ERROR]"fmt, ##args)
-#define gpufreq_warn(fmt, args...)      \
-	pr_warn(TAG"[WARNING]"fmt, ##args)
-#define gpufreq_info(fmt, args...)      \
-	pr_warn(TAG""fmt, ##args)
-#define gpufreq_dbg(fmt, args...)       \
-	do {                                \
-		if (mt_gpufreq_debug)           \
-			gpufreq_info(fmt, ##args);     \
-	} while (0)
-#define gpufreq_ver(fmt, args...)       \
-	do {                                \
-		if (mt_gpufreq_debug)           \
-			pr_debug(TAG""fmt, ##args);    \
-	} while (0)
-
+#define gpufreq_err(fmt, args...)       
+#define gpufreq_warn(fmt, args...)      
+#define gpufreq_info(fmt, args...)      
+#define gpufreq_dbg(fmt, args...)      
+#define gpufreq_ver(fmt, args...) 
 
 static sampler_func g_pFreqSampler;
 static sampler_func g_pVoltSampler;
