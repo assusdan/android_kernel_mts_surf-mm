@@ -1027,9 +1027,9 @@ static void tpd_suspend(struct device *h)
 		gesture_enter_doze();
 	} else
 #endif
-	{
+	{*/
 		gt1x_irq_disable();
-		ret = gt1x_enter_sleep();
+	/*	ret = gt1x_enter_sleep();
 		if (ret < 0)
 			GTP_ERROR("GTP early suspend failed.");
 		else
@@ -1082,8 +1082,8 @@ static void tpd_resume(struct device *h)
 #endif
 
 	tpd_halt = 0;
-	gt1x_irq_enable();
-
+*/	gt1x_irq_enable();
+/*
 #ifdef CONFIG_GTP_ESD_PROTECT
 	gt1x_esd_switch(SWITCH_ON);
 #endif
