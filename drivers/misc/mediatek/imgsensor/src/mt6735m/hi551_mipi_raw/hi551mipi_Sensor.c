@@ -192,7 +192,7 @@ static kal_uint16 read_cmos_sensor(kal_uint32 addr)
 	iWriteRegI2C(pu_send_cmd, 3, imgsensor.i2c_write_id);
 }
 */
-static void set_dummy()
+static void set_dummy(void)
 {
 
 
@@ -208,7 +208,7 @@ static void set_dummy()
   
 }	/*	set_dummy  */
 
-static kal_uint32 return_sensor_id()
+static kal_uint32 return_sensor_id(void)
 {
     return ((read_cmos_sensor(0x0f16) << 8) | read_cmos_sensor(0x0f17));
 }
@@ -2661,7 +2661,7 @@ write_cmos_sensor(0x0114, 0x05B2);		// y_output_size_h / l 1458
 // Sleep Off (Streaming On)
 write_cmos_sensor(0x0118, 0x0100);	//sleep Off
 }
-static void hs_video_setting()
+static void hs_video_setting(void)
 {
 	write_cmos_sensor(0x0118, 0x0000);			// Sleep On
 	write_cmos_sensor(0x0032, 0x0701);		// byrscl_crtl1 / tyrscl_fifo_read_delay
@@ -2692,7 +2692,7 @@ static void hs_video_setting()
 	write_cmos_sensor(0x0118, 0x0100);			// Sleep Off
 
 }
-static void slim_video_setting()
+static void slim_video_setting(void)
 {
     LOG_INF("E\n");
  
