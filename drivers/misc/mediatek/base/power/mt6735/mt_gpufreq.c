@@ -77,14 +77,14 @@
 #define GPU_DVFS_VOLT0     (125000)	/* mV x 100 */
 #define GPU_DVFS_VOLT1     (115000)	/* mV x 100 */
 #elif defined(CONFIG_ARCH_MT6735M)
-#define GPU_DVFS_FREQ0     (549250)	/* KHz */
+#define GPU_DVFS_FREQ0     (598000)	/* KHz */
 #define GPU_DVFS_FREQ1     (448500)	/* KHz */
 #define GPU_DVFS_FREQ2     (299000)	/* KHz */
 #define GPUFREQ_LAST_FREQ_LEVEL    (GPU_DVFS_FREQ2)
 
 #define GPU_DVFS_VOLT0     (125000)	/* mV x 100 */
-#define GPU_DVFS_VOLT1     (115000)	/* mV x 100 */
-#define GPU_DVFS_VOLT2     (105000)	/* mV x 100 */
+#define GPU_DVFS_VOLT1     (120000)	/* mV x 100 */
+#define GPU_DVFS_VOLT2     (115000)	/* mV x 100 */
 #else
 #define GPU_DVFS_FREQ0     (598000)	/* KHz */
 #define GPU_DVFS_FREQ1     (448500)	/* KHz */
@@ -97,7 +97,7 @@
 
 /* efuse */
 #define GPUFREQ_EFUSE_INDEX         (3)
-#define GPU_DEFAULT_MAX_FREQ_MHZ    (450)
+#define GPU_DEFAULT_MAX_FREQ_MHZ    (600)
 #define GPU_DEFAULT_TYPE            (1)
 
 /*
@@ -567,7 +567,7 @@ static void _mt_gpufreq_power_calculation(unsigned int idx, unsigned int freq, u
 #ifdef CONFIG_ARCH_MT6753
 #define GPU_ACT_REF_POWER	    1088	/* mW  */
 #elif defined(CONFIG_ARCH_MT6735M)
-#define GPU_ACT_REF_POWER	    360		/* mW  */
+#define GPU_ACT_REF_POWER	    720		/* mW  */
 #else
 #define GPU_ACT_REF_POWER	    720		/* mW  */
 #endif
@@ -1815,9 +1815,9 @@ static int _mt_gpufreq_pdrv_probe(struct platform_device *pdev)
 
 #ifdef MT_GPUFREQ_PERFORMANCE_TEST
 	/* fix at max freq */
-	pmic_set_register_value(PMIC_VCORE1_VOSEL_ON, _mt_gpufreq_volt_to_pmic_wrap(115000));
+	pmic_set_register_value(PMIC_VCORE1_VOSEL_ON, _mt_gpufreq_volt_to_pmic_wrap(125000));
 	udelay(300);
-	_mt_gpufreq_set_cur_freq(448500);
+	_mt_gpufreq_set_cur_freq(598000);
 
 	return 0;
 #endif
