@@ -39,12 +39,12 @@
 /***************************
  * Define for random test
  ****************************/
-/* #define MT_GPU_DVFS_RANDOM_TEST */
+#define MT_GPU_DVFS_RANDOM_TEST 
 
 /***************************
  * Define for performance test
  ****************************/
-/* #define MT_GPUFREQ_PERFORMANCE_TEST */
+#define MT_GPUFREQ_PERFORMANCE_TEST 
 
 /***************************
  * Define for SRAM debugging
