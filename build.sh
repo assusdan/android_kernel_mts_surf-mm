@@ -6,11 +6,11 @@ export KBUILD_BUILD_HOST=SRT
 if [ -f arch/arm/boot/zImage-dtb ]
 then
     echo 'Remove kernel...'
+    echo ""
     rm arch/arm/boot/zImage*
 fi
 
 echo "Git pull..."
-echo ""
 git pull >/dev/null
 echo ""
 
@@ -25,7 +25,6 @@ echo ""
 echo "Start build..."
 time make -j4 >/dev/null 2>errors.log
 echo ""
-echo ""
 
 if [ ! -f arch/arm/boot/zImage-dtb ]
 then
@@ -37,8 +36,6 @@ else
     cp arch/arm/boot/zImage-dtb /var/www/html/boot.img-kernel
     mv arch/arm/boot/zImage-dtb boot.img-kernel
 fi
-echo ""
-echo ""
 
 echo "======================"
 echo $[$SECONDS / 60]' minutes '$[$SECONDS % 60]' seconds' 
