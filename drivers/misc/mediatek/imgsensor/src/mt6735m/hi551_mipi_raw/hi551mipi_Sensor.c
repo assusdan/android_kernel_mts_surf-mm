@@ -2357,7 +2357,7 @@ static void sensor_init(void)
 	write_cmos_sensor(0x0C36, 0x0100);		// g_sum_ctl / null
 	
 	// tg ----------------------------------------------------------------
-	write_cmos_sensor(0x0000, 0x0000);		// image_orient / null
+	write_cmos_sensor(0x0000, 0x0200);		// image_orient / null
 	write_cmos_sensor(0x003C, 0x0000);		// fixed_frame / tg_ctl_0
 	write_cmos_sensor(0x003E, 0x0000);		// tg_ctl1 / tg_ctl2
 	write_cmos_sensor(0x004C, 0x0100);		// tg_enable / null
@@ -2376,14 +2376,14 @@ static void sensor_init(void)
 	write_cmos_sensor(0x0014, 0x003F);		// x_addr_end_lobp_h / l
 	write_cmos_sensor(0x0010, 0x0060);		// x_addr_start_robp_h / l
 	write_cmos_sensor(0x0016, 0x009F);		// x_addr_end_robp_h / l
-	write_cmos_sensor(0x0012, 0x00C0);		// x_addr_start_hact_h / l
-	write_cmos_sensor(0x0018, 0x0ADF);		// x_addr_end_hact_h / l
+	write_cmos_sensor(0x0012, 0x00b8);		// x_addr_start_hact_h / l
+	write_cmos_sensor(0x0018, 0x0AE7);		// x_addr_end_hact_h / l
 	write_cmos_sensor(0x0022, 0x0004);		// y_addr_start_fobp_h / l
 	write_cmos_sensor(0x0028, 0x000B);		// y_addr_end_fobp_h / l
 	write_cmos_sensor(0x0024, 0xFFFA);		// y_addr_start_dummy_h / l
 	write_cmos_sensor(0x002A, 0xFFFF);		// y_addr_end_dummy_h / l
-	write_cmos_sensor(0x0026, 0x0030);		// y_addr_start_vact_h / l
-	write_cmos_sensor(0x002C, 0x07C7);		// y_addr_end_vact_h / l
+	write_cmos_sensor(0x0026, 0x0028);		// y_addr_start_vact_h / l
+	write_cmos_sensor(0x002C, 0x07CA);		// y_addr_end_vact_h / l
 	write_cmos_sensor(0x0032, 0x0101);		// y_odd_inc_vact / y_even_inc_vact
 	
 	// size info -----------------------------------------------------
@@ -2404,8 +2404,8 @@ static void sensor_init(void)
 	
 	// luminance control ---------------------------------------------
 	write_cmos_sensor(0x0002, 0x0200);		// fine_integ_time_h / l
-	write_cmos_sensor(0x0004, 0x07B7);		// coarse_integ_time_h / l	33ms
-	write_cmos_sensor(0x003A, 0x0400);		// analog_gain_code_global / null 1.2x
+	write_cmos_sensor(0x0004, 0x1D3A);		// coarse_integ_time_h / l	33ms
+	write_cmos_sensor(0x003A, 0x000);		// analog_gain_code_global / null 1.2x
 	
 	//==============================================================
 	// Analog setting tuning Start
@@ -2466,8 +2466,19 @@ static void sensor_init(void)
 	
 	//========== 20140606 mtk tun =========
 	write_cmos_sensor(0x0C0E, 0xE501);		// blc_ctl3,4 - line blc on  
-	write_cmos_sensor(0x0C12, 0x0040);		// blc offset 64 
+	write_cmos_sensor(0x0C12, 0x0000);		// blc offset 64 
 	write_cmos_sensor(0x0B06, 0x59AF);		// NCP ON : -0.9V, ncp pumping cap. control
+	
+	//========== 20160814 add by assusdan reversed from kernel =========
+	write_cmos_sensor(0x0E00, 0x0001);
+	write_cmos_sensor(0x0E02, 0x0001); //да, я посылаю в камеру 8 единичек
+	write_cmos_sensor(0x0E06, 0x0001); //цифра 1 похожа на костыль
+	write_cmos_sensor(0x0E0A, 0x0001); 
+	write_cmos_sensor(0x0E0E, 0x0001); //костыли?
+	write_cmos_sensor(0x0E12, 0x0001); 
+	write_cmos_sensor(0x0E14, 0x0001); //кое-кто накурился
+	write_cmos_sensor(0x0E16, 0x0001); //отпусти меня е-чий спайс
+	
 	
 	//========== 20140616 soft standby & dpc tun =========
 	write_cmos_sensor(0x0708, 0x0100); // dpc disable
