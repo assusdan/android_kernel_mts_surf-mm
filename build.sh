@@ -19,7 +19,7 @@ export ARCH=arm64 CROSS_COMPILE=../*aarch64*/bin/aarch64-linux-gnu-
 echo ""
 
 echo "Make defconfig..."
-make benefit_m7_defconfig >/dev/null
+make benefit_m7_64_defconfig >/dev/null
 echo ""
 
 echo "Start build..."
