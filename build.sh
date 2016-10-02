@@ -3,11 +3,11 @@
 export KBUILD_BUILD_USER=assusdan
 export KBUILD_BUILD_HOST=SRT
 
-if [ -f arch/arm/boot/zImage-dtb ]
+if [ -f arch/arm64/boot/Image.gz-dtb ]
 then
     echo 'Remove kernel...'
     echo ""
-    rm arch/arm/boot/zImage*
+    rm arch/arm64/boot/Image*
 fi
 
 echo "Git pull..."
@@ -15,7 +15,7 @@ git pull >/dev/null
 echo ""
 
 echo "Export toolchains..."
-export ARCH=arm CROSS_COMPILE=../*5.2*/bin/arm-cortex-linux-gnueabi-
+export ARCH=arm64 CROSS_COMPILE=../*aarch64*/bin/aarch64-linux-gnu-
 echo ""
 
 echo "Make defconfig..."
@@ -26,15 +26,15 @@ echo "Start build..."
 time make -j4 >/dev/null 2>errors.log
 echo ""
 
-if [ ! -f arch/arm/boot/zImage-dtb ]
+if [ ! -f arch/arm64/boot/Image.gz-dtb ]
 then
     echo "BUILD ERRORS!"
     echo "BUILD ERRORS!"
     echo "BUILD ERRORS!"
 else
     echo 'Moving...'
-    cp arch/arm/boot/zImage-dtb /var/www/html/boot.img-kernel
-    mv arch/arm/boot/zImage-dtb boot.img-kernel
+    cp arch/arm64/boot/Image.gz-dtb /var/www/html/boot.img-kernel
+    mv arch/arm64/boot/Image.gz-dtb boot.img-kernel
 fi
 
 echo "======================"
