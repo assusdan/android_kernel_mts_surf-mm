@@ -9,20 +9,21 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 #include "mt6735m-pinfunc.h"
 #include <dt-bindings/mmc/mt67xx-msdc.h>
+
 / {
 	model = "MT6735M";
-	compatible = "mediatek,MT6735M";
+	compatible = "mediatek,MT6735";
 	interrupt-parent = <&gic>;
 	#address-cells = <2>;
 	#size-cells = <2>;
 
 	/* chosen */
-	chosen {
-		bootargs = "console=tty0 console=ttyMT0,921600n1 root=/dev/ram \
-initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
-	};
+		chosen {
+			bootargs = "console=tty0 console=ttyMT0,921600n1 root=/dev/ram \
+			initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
+		};
 
-/* Do not put any bus before mtk-msdc, because it should be mtk-msdc.0 for partition device node usage */
+	/* Do not put any bus before mtk-msdc, because it should be mtk-msdc.0 for partition device node usage */
 	/*workaround for .0*/
 	mtk-msdc.0 {
 				compatible = "simple-bus";
@@ -52,16 +53,25 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 	};
 	};
 
+	psci {
+		compatible	= "arm,psci";
+		method		= "smc";
+		cpu_suspend	= <0x84000001>;
+		cpu_off		= <0x84000002>;
+		cpu_on		= <0x84000003>;
+		affinity_info	= <0x84000004>;
+	};
 
-	cpus {	#address-cells = <1>;
+	cpus {
+		#address-cells = <1>;
 		#size-cells = <0>;
+/*		enable-method = "mediatek,mt6735-smp"; */
 
 		cpu0: cpu@000 {
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x000>;
-			enable-method = "mt-boot";
-			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
+			enable-method = "spin-table";
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1000000000>;
 		};
@@ -70,8 +80,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x001>;
-			enable-method = "mt-boot";
-			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
+			enable-method = "spin-table";
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1000000000>;
 		};
@@ -80,8 +89,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x002>;
-			enable-method = "mt-boot";
-			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
+			enable-method = "spin-table";
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1000000000>;
 		};
@@ -90,30 +98,9 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x003>;
-			enable-method = "mt-boot";
-			cpu-idle-states = <&cluster_sleep_0 &cluster_sleep_0 &cpu_sleep_0_0 &cpu_sleep_0_0>;
+			enable-method = "spin-table";
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1000000000>;
-		};
-
-		idle-states {
-			entry-method = "arm,psci";
-
-			cpu_sleep_0_0: cpu-sleep-0-0 {
-				compatible = "arm,idle-state";
-				arm,psci-suspend-param = <0x0010000>;
-				entry-latency-us = <600>;
-				exit-latency-us = <600>;
-				min-residency-us = <1200>;
-			};
-
-			cluster_sleep_0: cluster-sleep-0 {
-				compatible = "arm,idle-state";
-				arm,psci-suspend-param = <0x1010000>;
-				entry-latency-us = <800>;
-				exit-latency-us = <1000>;
-				min-residency-us = <2000>;
-			};
 		};
 	};
 
@@ -122,6 +109,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 		reg = <0 0x40000000 0 0x40000000>;
 	};
 
+
 		reserved-memory {
 				#address-cells = <2>;
 				#size-cells = <2>;
@@ -129,11 +117,11 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 
 				/* reserve 192KB at DRAM start + 48MB */
 				atf-reserved-memory@43000000 {
-					compatible = "mediatek,mt6735-atf-reserved-memory",
+						compatible = "mediatek,mt6735-atf-reserved-memory",
 						"mediatek,mt6735m-atf-reserved-memory",
 						"mediatek,mt6753-atf-reserved-memory";
-					no-map;
-					reg = <0 0x43000000 0 0x30000>;
+						no-map;
+						reg = <0 0x43000000 0 0x30000>;
 				};
 
 		reserve-memory-ccci_md1 {
@@ -209,32 +197,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 		#address-cells = <1>;
 		#size-cells = <1>;
 		ranges;
-
-		gpio_usage_mapping:gpio {
-			compatible = "mediatek,gpio_usage_mapping";
-		};
-
-		gpio: gpio@10211000 {
-			compatible = "mediatek,gpio";
-			reg = <0x10211000 0x1000>;
-		};
-
-		dramc_nao: dramc_nao@1020e000 {
-			compatible = "mediatek,mt6735-dramc_nao";
-			reg = <0x1020e000 0x1000>;
-		};
-
-		ddrphy: ddrphy@10213000 {
-			compatible = "mediatek,mt6735-ddrphy";
-			reg = <0x10213000 0x1000>;
-		};
-
-		dramc: dramc@10214000 {
-			compatible = "mediatek,mt6735-dramc";
-			reg = <0x10214000 0x1000>;
-			/*clocks = <&infrasys INFRA_GCE>;*/
-			clock-names = "infra-cqdma";
-		};
 
 		cpuxgpt: cpuxgpt@10200000 {
 			compatible = "mediatek,mt6735-cpuxgpt";
@@ -517,6 +479,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 				vio18-supply = <&mt_pmic_vio18_ldo_reg>;
 				vsram-supply = <&mt_pmic_vsram_ldo_reg>;
 				vm-supply = <&mt_pmic_vm_ldo_reg>;
+
 			};/* End of regulators_supply */
 		};/* End of mt_pmic_regulator */
 		toprgu: toprgu@10212000 {
@@ -528,6 +491,32 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 		mcu_biu: mcu_biu@10300000 {
 			compatible = "mediatek,mt6735-mcu_biu";
 			reg = <0x10300000 0x8000>;
+		};
+
+		gpio_usage_mapping:gpio {
+			compatible = "mediatek,gpio_usage_mapping";
+		};
+
+		gpio: gpio@10211000 {
+			compatible = "mediatek,gpio";
+			reg = <0x10211000 0x1000>;
+		};
+
+		dramc_nao: dramc_nao@1020e000 {
+			compatible = "mediatek,mt6735-dramc_nao";
+			reg = <0x1020e000 0x1000>;
+		};
+
+		ddrphy: ddrphy@10213000 {
+			compatible = "mediatek,mt6735-ddrphy";
+			reg = <0x10213000 0x1000>;
+		};
+
+		dramc: dramc@10214000 {
+			compatible = "mediatek,mt6735-dramc";
+			reg = <0x10214000 0x1000>;
+			/*clocks = <&infrasys INFRA_GCE>;*/
+			clock-names = "infra-cqdma";
 		};
 
 		keypad: keypad@10003000 {
@@ -631,7 +620,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			reg = <0x10008000 0x1000>;
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>;
 		};
-
 		als: als {
 			compatible = "mediatek, als-eint";
 		};
@@ -644,7 +632,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			compatible = "mediatek, ext_buck_oc-eint";
 			status = "disabled";
 		};
-
 	};
 
 	bus {
@@ -679,6 +666,8 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			interrupts = <0 164 0x2>;
 		};
 
+
+
 		eintc: eintc@10005000 {
 			compatible = "mediatek,mt-eic";
 			reg = <0x10005000 0x1000>;
@@ -691,15 +680,14 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			mediatek,mapping_table_entry = <0>;
 		};
 
-		SLEEP@0x10006000 {
-			compatible = "mediatek,SLEEP";
-			reg = <0x10006000 0x1000>;
-			interrupts = <0 165 0x8>,
-									 <0 166 0x8>,
-									 <0 167 0x8>,
-									 <0 168 0x8>;
-		};
-
+				SLEEP@0x10006000 {
+						compatible = "mediatek,SLEEP";
+						reg = <0x10006000 0x1000>;
+						interrupts = <0 165 0x8>,
+												 <0 166 0x8>,
+												 <0 167 0x8>,
+												 <0 168 0x8>;
+				};
 
 		DEVAPC_AO@10007000 {
 			compatible = "mediatek,DEVAPC_AO";
@@ -710,6 +698,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			compatible = "mediatek,RSVD";
 			reg = <0x10009000 0x1000>;
 		};
+
 
 		bat_meter: bat_meter {
 			compatible = "mediatek,bat_meter";
@@ -1072,26 +1061,14 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			reg = <0x11006000 0x1000>;
 			interrupts = <0 77 0x8>;
 		};
-
-				G3D_CONFIG@0x13000000 {
-						compatible = "mediatek,G3D_CONFIG";
-						reg = <0x13000000 0x1000>;
-				};
-
-
-				IMGSYS@0x15000000 {
-						compatible = "mediatek,IMGSYS";
-						reg = <0x15000000 0x1000>;
-				};
-
-				syscfg_pctl_a: syscfg_pctl_a@0x10211000 {
+		syscfg_pctl_a: syscfg_pctl_a@0x10211000 {
 			compatible = "mediatek,mt6735-pctl-a-syscfg", "syscon";
-			reg = <0 0x10211000 0 0x1000>;
+			reg = <0x10211000 0x1000>;
 		};
 
-				pio: pinctrl@0x10211000 {
+		pio: pinctrl@0x10211000 {
 			compatible = "mediatek,mt6735-pinctrl";
-			reg = <0 0x10211000 0 0x1000>;
+			reg = <0x10211000 0x1000>;
 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
 			pins-are-numbered;
 			gpio-controller;
@@ -1133,6 +1110,17 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 						<GIC_SPI 102 IRQ_TYPE_LEVEL_LOW>;
 			def_speed = <100>;
 		};
+
+				G3D_CONFIG@0x13000000 {
+						compatible = "mediatek,G3D_CONFIG";
+						reg = <0x13000000 0x1000>;
+				};
+
+
+				IMGSYS@0x15000000 {
+						compatible = "mediatek,IMGSYS";
+						reg = <0x15000000 0x1000>;
+				};
 
 		SPI1@0x1100A000 {
 			cell-index = <0>;
@@ -1242,7 +1230,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			dma = <1>;
 			num_eps = <16>;
 			dma_channels = <8>;
-			drvvbus_gpio = <83 2>;
+			drvvbus_gpio = <96 2>;
 		};
 
 		audio@11220000 {
@@ -1251,7 +1239,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
 		};
 
-		mt_soc_dl1_pcm@11220000 {
+		audgpio:mt_soc_dl1_pcm@11220000 {
 			compatible = "mediatek,mt-soc-dl1-pcm";
 			reg = <0x11220000 0x1000>;
 			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
@@ -1259,7 +1247,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			audmiso-gpio = <144 0>;
 			audmosi-gpio = <145 0>;
 			vowclk-gpio = <148 0>;
-			extspkamp-gpio = <117 0>;
+			extspkamp-gpio = <4 0>;
 			i2s1clk-gpio = <80 0>;
 			i2s1dat-gpio = <78 0>;
 			i2s1mclk-gpio = <9 0>;
@@ -1432,7 +1420,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			clock-frequency = <450000000>;
 		};
 
-
 		mmsys_config@14000000 {
 			compatible = "mediatek,mmsys_config";
 			reg = <0x14000000 0x1000>;
@@ -1508,7 +1495,8 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 				<0x102100A0 0x1000>,  /*DISP_TVDPLL_CFG6 */
 				<0x10209260 0x1000>,  /*DISP_TVDPLL_CON0 */
 				<0x10209264 0x1000>,  /*DISP_TVDPLL_CON1 */
-				<0 0>;  /*DISP_OD      */
+				<0 0>,  /*DISP_OD      */
+				<0x10209000 0x1000>;  /*DISP_VENCPLL      */
 
 			interrupts = <0 193 8>, /*DISP_OVL0 */
 				 <0 0 8>, /*DISP_OVL1 */
@@ -1536,7 +1524,8 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 				 <0 0 8>,  /*DISP_TVDPLL_CFG6 */
 				 <0 0 8>,  /*DISP_TVDPLL_CON0 */
 				 <0 0 8>,  /*DISP_TVDPLL_CON1 */
-				 <0 0 8>;  /*DISP_OD      */
+				 <0 0 8>,  /*DISP_OD      */
+				 <0 0 8>;  /*DISP_VENCPLL      */
 				};
 
 		DISP_OVL0@0x14007000 {
@@ -1633,8 +1622,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			interrupts = <0 186 0x8>;
 		};
 
-
-
 		met_smi: met_smi@14017000 {
 			compatible = "mediatek,met_smi";
 			reg = <0x14017000 0x1000>,  /* SMI_COMMON_EXT */
@@ -1667,13 +1654,13 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			reg = <0x14018000 0x1000>;
 		};
 
-		ISPSYS@0x15000000 {
+								ISPSYS@0x15000000 {
 			compatible = "mediatek,ISPSYS";
 			reg = <0x15004000 0x9000>,  /*ISP_ADDR      */
 				<0x15000000 0x10000>,  /*IMGSYS_CONFIG_ADDR      */
 				<0x10215000 0x1000>;  /*MIPI_ANA_ADDR      */
 			interrupts = <0 182 0x8>, /* SENINF */
-				 <0 183 0x8>; /* CAM0 */
+									 <0 183 0x8>; /* CAM0 */
 		};
 		kd_camera_hw1:kd_camera_hw1@15008000 {
 			compatible = "mediatek,camera_hw";
@@ -1687,11 +1674,11 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 			compatible = "mediatek,camera_hw2";
 			reg = <0x15008000 0x1000>;  /* SENINF_ADDR */
 		};
-		/*for sysram dev and pipemgr dev*/
-		ISP_SYSR@0x15000000 {
+								/*for sysram dev and pipemgr dev*/
+								ISP_SYSR@0x15000000 {
 			compatible = "mediatek,ISP_SYSR";
 		};
-		ISP_PIPEM@0x15000000 {
+								ISP_PIPEM@0x15000000 {
 			compatible = "mediatek,ISP_PIPEM";
 		};
 		SENINF_TOP@0x15008000 {
@@ -1724,18 +1711,10 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 		};
 
 
-
-		IMGSYS_CONFG@0x15000000 {
-			compatible = "mediatek,IMGSYS_CONFG";
-			reg = <0x15000000 0x1000>;
-		};
-
 		VDEC_GCON@0x16000000 {
 			compatible = "mediatek,VDEC_GCON";
 			reg = <0x16000000 0x1000>;
 		};
-
-
 
 		VDEC_FULL_TOP@0x16020000 {
 			compatible = "mediatek,VDEC_FULL_TOP";
@@ -1758,14 +1737,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 	};
 	lcm: lcm {
 		compatible = "mediatek,lcm";
-	};
-	psci {
-		compatible  = "arm,psci";
-		method      = "smc";
-		cpu_suspend = <0x84000001>;
-		cpu_off     = <0x84000002>;
-		cpu_on      = <0x84000003>;
-		affinity_info = <0x84000004>;
 	};
 
 /* sensor part */
@@ -1815,15 +1786,6 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 	};
 
 /* sensor end */
-
-	mt8193ckgen: mt8193ckgen@0 {
-		compatible = "mediatek,mt8193-ckgen";
-	};
-
-	multibridge@0 {
-		compatible = "mediatek,multibridge";
-	};
-
 	MOBICORE {
 		compatible = "trustonic,mobicore";
 		interrupts = <GIC_SPI 248 IRQ_TYPE_EDGE_RISING>;
@@ -1836,37 +1798,7 @@ initrd=0x44000000,0x1000000 loglevel=8 androidboot.hardware=mt6735";
 	};
 };
 
-#include "cust.dtsi"
-
-&mt8193ckgen {
-	pinctrl-names = "default", "bus_switch_gpio", "bus_switch_dpi";
-	pinctrl-0 = <&mt8193ckgen_pins_default>;
-	pinctrl-1 = <&mt8193ckgen_pins_gpio>;
-	pinctrl-2 = <&mt8193ckgen_pins_dpi>;
-	bus_switch_pin = <&pio 0 0>;
-	status = "okay";
-};
-
-&pio {
-	mt8193ckgen_pins_default: 8193ckgen_default {
-	};
-
-	mt8193ckgen_pins_gpio: 8193ckgen_gpio {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO0__FUNC_GPIO0>;
-			slew-rate = <1>;
-			bias-pull-up = <00>;
-			output-high;
-			output-low;
-		};
-	};
-
-	mt8193ckgen_pins_dpi: 8193ckgen_dpi {
-		pins_cmd_dat {
-			pins = <PINMUX_GPIO0__FUNC_DPI_D4>;
-		};
-	};
-};
+#include <cust.dtsi>
 
 &eintc {
 	pmic@206 {
